@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using ProtoBuf;
 using VRage.Library;
 using VRage;
@@ -19,49 +18,52 @@ namespace Faction_Territories.Config
 	public class ServerConfig
 	{
 		[ProtoMember(1)]
-		public SerializableDictionary<long, string> _AllianceNames;
+		public SerializableDictionary<long, string> AllianceNames;
 
 		[ProtoMember(2)]
-		public SerializableDictionary<long, ulong> _AllianceChannelIds;
+		public SerializableDictionary<long, ulong> AllianceChannelIds;
 
 		[ProtoMember(3)]
 		public ulong GlobalDiscordChannelId;
 
-		[XmlIgnore]
-		[ProtoIgnore]
-		public Dictionary<long, string> AllianceNames
-		{
-			get
-			{
-				if (_AllianceNames == null)
-					_AllianceNames = new SerializableDictionary<long, string>( new Dictionary<long, string> { { 0, "None"} } );
 
-				return _AllianceNames.Dictionary;
-			}
-			set
-			{
-				_AllianceNames.Dictionary = value;
-			}
+		public ServerConfig()
+		{
+			AllianceNames = new SerializableDictionary<long, string>(new Dictionary<long, string> { { 0, "None" } });
+			AllianceChannelIds = new SerializableDictionary<long, ulong>(new Dictionary<long, ulong> { { 0, 0 } });
 		}
 
-		[XmlIgnore]
-		[ProtoIgnore]
-		public Dictionary<long, ulong> AllianceChannelIds
+		public ServerConfig(List<string> names, List<ulong> ids, ulong globalId)
 		{
-			get
-			{
-				if (_AllianceChannelIds == null)
-					_AllianceChannelIds = new SerializableDictionary<long, ulong>( new Dictionary<long, ulong> { { 0, 0} } );
+			Dictionary<long, string> dictNames = AllianceNames.Dictionary;
+			Dictionary<long, ulong> dictIds = AllianceChannelIds.Dictionary;
 
-				return _AllianceChannelIds.Dictionary;
-			}
-			set
+			if (names.Count == ids.Count)
 			{
-				_AllianceChannelIds.Dictionary = value;
+				for (int i = dictNames.Count; i < names.Count; i++)
+				{
+					dictNames[i] = names[i - 1];
+					dictIds[i] = ids[i - 1];
+				}
 			}
+
+			AllianceNames = new SerializableDictionary<long, string>(dictNames);
+			AllianceChannelIds = new SerializableDictionary<long, ulong>(dictIds);
+			GlobalDiscordChannelId = globalId;
 		}
 
-		public ServerConfig() {}
+		public Dictionary<long, ulong> Setup(List<string> allianceNames)
+		{
+			if (AllianceNames?.Dictionary?.Values != null && AllianceNames.Dictionary.Count == AllianceChannelIds.Dictionary.Count)
+			{
+				allianceNames.Clear();
+				foreach (string name in AllianceNames?.Dictionary?.Values)
+					allianceNames.Add(name);
+				return AllianceChannelIds.Dictionary;
+			}
+			allianceNames = new List<string> { "None" };
+			return new Dictionary<long, ulong> { { 0, 0 } };
+		}
 
 		public static ServerConfig Load()
 		{

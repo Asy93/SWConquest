@@ -63,15 +63,8 @@ namespace Faction_Territories
         {
             Instance = this;
             Config = ServerConfig.Load();
-            if (Config.AllianceNames.Count > 0)
-            {
-                foreach (var kvp in Config.AllianceNames)
-                {
-                    AllianceNames.Add(kvp.Value);
-                    AllianceChannelIds.Add(kvp.Key, Config.AllianceChannelIds[kvp.Key]);
-                }
-            }
-            isServer = MyAPIGateway.Multiplayer.IsServer;
+            AllianceChannelIds = Config.Setup(AllianceNames);
+			isServer = MyAPIGateway.Multiplayer.IsServer;
             isDedicated = MyAPIGateway.Utilities.IsDedicated;
             MyAPIGateway.Multiplayer.RegisterSecureMessageHandler(4910, MessageHandler);
             
