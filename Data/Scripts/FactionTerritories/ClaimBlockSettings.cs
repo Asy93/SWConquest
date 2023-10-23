@@ -424,7 +424,7 @@ namespace Faction_Territories
             _consumptionItem = "MyObjectBuilder_Component/ZoneChip";
             _consumptionAmt = 1;
             _isSiegeCooling = false;
-            _siegeCoolingTime = 259200;
+            _siegeCoolingTime = 604800;
             _territoryStatus = TerritoryStatus.Neutral;
             _server = new ServerData();
             //_jdSieging = null;
