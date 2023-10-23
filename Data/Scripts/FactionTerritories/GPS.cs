@@ -51,7 +51,7 @@ namespace Faction_Territories
 			IMyGps gps = null;
             if (settings.IsClaimed)
 			{
-                Color color = GPSColor(settings, playerId);
+				Color color = Utils.IsFactionEnemy(settings, MyAPIGateway.Session.Factions.TryGetPlayerFaction(playerId)) ? Color.OrangeRed : Color.LimeGreen;
 				gps = CreateNewGps($"Claimed Territory - {settings.TerritoryName} ({settings.ClaimedFaction})", $"{settings.TerritoryName} (ClaimBlock)", pos, playerId, color);
                 if(gps != null)
                 {
@@ -62,7 +62,7 @@ namespace Faction_Territories
             }
             else
             {
-                gps = CreateNewGps($"Unclaimed Territory - {settings.TerritoryName}", $"{settings.TerritoryName} (ClaimBlock)", pos, playerId, Color.Gray);
+                gps = CreateNewGps($"Unclaimed Territory - {settings.TerritoryName}", $"{settings.TerritoryName} (ClaimBlock)", pos, playerId, Color.White);
                 if (gps != null)
                 {
                     AddGpsData(gps, gps.Name, settings.Block.CubeGrid, playerId, settings, GpsType.Block);
@@ -81,16 +81,12 @@ namespace Faction_Territories
 
         public static void UpdateBlockText(ClaimBlockSettings settings, string text, long playerId = 0)
         {
-            if (settings == null || settings.Block == null) return;
-            IMyCubeGrid grid = settings.Block.CubeGrid;
+            IMyCubeGrid grid = settings.Block?.CubeGrid;
             if (grid == null) return;
             bool foundgps = false;
-            if (settings.GetGridsInside != null && settings.GetGridsInside.Count != 0 && settings.GetGridsInside.ContainsKey(grid.EntityId))
+            if (settings.GetGridsInside.Count != 0 && settings.GetGridsInside.ContainsKey(grid.EntityId))
             {
-                if (settings.GetGridsInside[grid.EntityId] == null)
-                    settings.GetGridsInside[grid.EntityId] = new GridData(grid.EntityId, grid as MyCubeGrid);
-
-				List<GpsData> gpsData = settings.GetGpsData(grid.EntityId);
+                List<GpsData> gpsData = settings.GetGridsInside[grid.EntityId].gpsData;
                 for (int i = gpsData.Count - 1; i >= 0; i--)
                 {
                     if (playerId != 0 && playerId != gpsData[i].playerId) continue;
@@ -101,8 +97,8 @@ namespace Faction_Territories
                         gps.Name = text;
                         gps.Coords = settings.BlockPos;
                         gps.Description = $"{settings.TerritoryName} (ClaimBlock)";
-                        gps.GPSColor = GPSColor(settings, playerId);
-						gps.DiscardAt = null;
+                        gps.GPSColor = Utils.IsFactionEnemy(settings, MyAPIGateway.Session.Factions.TryGetPlayerFaction(gpsData[i].playerId)) ? Color.OrangeRed : Color.LimeGreen;
+                        gps.DiscardAt = null;
                         MyAPIGateway.Session.GPS.ModifyGps(gpsData[i].playerId, gps);
                         //MyVisualScriptLogicProvider.SetGPSColor(gps.Name, Color.Orange, gpsData[i].playerId);
                         gps.UpdateHash();
@@ -125,8 +121,9 @@ namespace Faction_Territories
                         gps.Coords = settings.BlockPos;
                         gps.Description = $"{settings.TerritoryName} (ClaimBlock)";
                         gps.DiscardAt = null;
-                        gps.GPSColor = GPSColor(settings, playerId);
+						gps.GPSColor = Utils.IsFactionEnemy(settings, MyAPIGateway.Session.Factions.TryGetPlayerFaction(playerId)) ? Color.OrangeRed : Color.LimeGreen;
 						MyAPIGateway.Session.GPS.ModifyGps(playerId, gps);
+                        //MyVisualScriptLogicProvider.SetGPSColor(gps.Name, Color.Orange, playerId);
                         gps.UpdateHash();
 
                         AddGpsData(gps, gps.Name, settings.Block.CubeGrid, playerId, settings, GpsType.Block);
@@ -138,12 +135,13 @@ namespace Faction_Territories
                 if (!foundInList)
                     AddBlockLocation(settings.BlockPos, playerId, settings);
             }
+                
         }
 
         public static Color GPSColor(ClaimBlockSettings settings, long identityId)
         {
             IMyFaction playerFaction = MyAPIGateway.Session.Factions.TryGetPlayerFaction(identityId);
-            if (playerFaction == null || !settings.IsClaimed)
+            if (playerFaction == null)
                 return Color.Gray;
 			var relation = MyAPIGateway.Session.Factions.GetRelationBetweenFactions(settings.FactionId, playerFaction.FactionId);
 			if (relation == MyRelationsBetweenFactions.Enemies) return Color.Red;

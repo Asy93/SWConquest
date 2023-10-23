@@ -2377,8 +2377,8 @@ namespace Faction_Territories
         public bool hasController;
         public bool hasPower;
         public bool hasGps;
-        public List<GpsData> gpsData = new List<GpsData>();
-		public BlocksMonitored blocksMonitored;
+        public List<GpsData> gpsData;
+        public BlocksMonitored blocksMonitored;
 
         public GridData()
         {
@@ -2404,9 +2404,9 @@ namespace Faction_Territories
     public class PlayerData
     {
         public long playerId;
-        public List<GpsData> gpsData = new List<GpsData>();
+        public List<GpsData> gpsData;
 
-		public PlayerData()
+        public PlayerData()
         {
 
         }

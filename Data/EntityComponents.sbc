@@ -46,7 +46,7 @@
                 <TypeId>Inventory</TypeId>
                 <SubtypeId>ClaimBlock</SubtypeId>
             </Id>
-            <Volume>5.0</Volume>
+            <Volume>15.0</Volume>
             <!--<InputConstraint IsWhitelist="true">
                 <Entry>
                     <TypeId>Component</TypeId>
