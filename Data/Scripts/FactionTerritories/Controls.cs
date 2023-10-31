@@ -687,7 +687,7 @@ namespace Faction_Territories
             siegeCooldown.Visible = Block => ActionControls.IsSiegeControls(Block);
             siegeCooldown.Title = MyStringId.GetOrCompute("Siege Fail Cooldown");
             siegeCooldown.Tooltip = MyStringId.GetOrCompute("Sets the time to cooldown after a failed final siege before it can be sieged again (minutes)");
-            siegeCooldown.SetLimits((float)Math.Round(0d, 0), (float)Math.Round(7200d, 0));
+            siegeCooldown.SetLimits((float)Math.Round(0d, 0), (float)Math.Round(8640d, 0));
             siegeCooldown.Writer = (Block, Builder) =>
             {
 

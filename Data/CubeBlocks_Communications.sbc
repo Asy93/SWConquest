@@ -17,15 +17,13 @@
       <Size x="1" y="3" z="1" />
       <ModelOffset x="0" y="0" z="0" />
       <Model>Models\ClaimBlock\Guardians_LandClaim_K_Large.mwm</Model>
-      <Components>
-	  
+      <Components>  
         <Component Subtype="SteelPlate" Count="40" />
         <Component Subtype="Construction" Count="30" />
         <Component Subtype="LargeTube" Count="20" />
         <Component Subtype="Computer" Count="10" />
         <Component Subtype="RadioCommunication" Count="40" />
         <Component Subtype="SteelPlate" Count="40" />
-		
       </Components>
       <CriticalComponent Subtype="RadioCommunication" Index="0" />
       <MountPoints>

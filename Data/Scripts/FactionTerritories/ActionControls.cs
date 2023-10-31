@@ -970,7 +970,7 @@ namespace Faction_Territories
         public static float GetSiegeCooldownTime(IMyTerminalBlock block)
         {
             ClaimBlockSettings settings;
-            if (!Session.Instance.claimBlocks.TryGetValue(block.EntityId, out settings)) return 7200f;
+            if (!Session.Instance.claimBlocks.TryGetValue(block.EntityId, out settings)) return 8640f;
             return settings.SiegeCoolingTime / 60;
         }
 
