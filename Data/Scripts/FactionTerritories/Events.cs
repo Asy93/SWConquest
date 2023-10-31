@@ -591,7 +591,7 @@ namespace Faction_Territories
             {
 				beacon.Enabled = true;
 				beacon.CubeGrid.IsStatic = true;
-				cubeGrid.Editable = true;   
+				cubeGrid.Editable = false;   
 				cubeGrid.DestructibleBlocks = false;
 				//beacon.CubeGrid.CustomName = "Faction Territory Claim [NPC-IGNORE]";
 				beacon.CustomName = "Faction Territory Claim";
